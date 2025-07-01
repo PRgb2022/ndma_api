@@ -8,7 +8,7 @@ def get_connection():
         host="localhost",       # Replace with Railway DB host if deploying
         user="root",            # Your MySQL username
         password="Prajwal.sql@25",    # Your MySQL password
-        database="ndmaalerts.db"
+        database="ndma_alerts"
     )
 
 @app.route('/filter_alerts', methods=['GET'])
