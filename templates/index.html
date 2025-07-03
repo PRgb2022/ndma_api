@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NDMA Alert Filter</title>
+</head>
+<body>
+    <h2>Filter NDMA Alerts</h2>
+    <form method="post">
+        <label>Severity:</label> <input type="text" name="severity"><br><br>
+        <label>State:</label> <input type="text" name="state"><br><br>
+        <label>Area:</label> <input type="text" name="area"><br><br>
+        <input type="submit" value="Search">
+    </form>
+
+    {% if results %}
+        <h3>Results:</h3>
+        <table border="1">
+            <tr>
+                <th>State</th><th>Area</th><th>Severity</th>
+                <th>Event Type</th><th>Certainty</th>
+                <th>Count</th><th>Total Filtered Alerts</th>
+            </tr>
+            {% for row in results %}
+                <tr>
+                    {% for col in row %}
+                        <td>{{ col }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</body>
+</html>
