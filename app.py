@@ -1,38 +1,35 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, render_template
 import mysql.connector
 
 app = Flask(__name__)
 
 def get_connection():
     return mysql.connector.connect(
-        host="localhost",       # Replace with Railway DB host if deploying
-        user="root",            # Your MySQL username
-        password="Prajwal.sql@25",    # Your MySQL password
+        host="localhost",
+        user="root",
+        password="Prajwal.sql@25",
         database="ndma_alerts"
     )
 
-@app.route('/filter_alerts', methods=['GET'])
-def filter_alerts():
-    severity = request.args.get('severity') or None
-    state = request.args.get('state') or None
-    area = request.args.get('area') or None
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    results = []
+    if request.method == 'POST':
+        severity = request.form.get('severity') or None
+        state = request.form.get('state') or None
+        area = request.form.get('area') or None
 
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    try:
+        conn = get_connection()
+        cursor = conn.cursor()
         cursor.callproc('filter_alerts_with_totals', [severity, state, area])
-        results = []
+
         for result in cursor.stored_results():
-            columns = result.column_names
-            for row in result.fetchall():
-                results.append(dict(zip(columns, row)))
-        return jsonify(results)
-    except mysql.connector.Error as err:
-        return jsonify({'error': str(err)}), 500
-    finally:
+            results = result.fetchall()
+
         cursor.close()
         conn.close()
+
+    return render_template('index.html', results=results)
 
 if __name__ == '__main__':
     app.run(debug=True)
