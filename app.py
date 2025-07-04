@@ -8,7 +8,7 @@ def get_connection():
         host="127.0.0.1",  # Important: avoid 'localhost'
         user="root",
         password="Prajwal.sql@25",
-        database="ndma_alerts"
+        database="alerts.db"
     )
 
 @app.route('/', methods=['GET', 'POST'])
