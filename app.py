@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 def get_connection():
     return mysql.connector.connect(
-        host="localhost",
+        host="127.0.0.1",  # Important: avoid 'localhost'
         user="root",
         password="Prajwal.sql@25",
         database="ndma_alerts"
