@@ -1,6 +1,6 @@
 db_config = {
-    'host': 'your-db-host',
-    'user': 'your-db-user',
-    'password': 'your-db-password',
-    'database': 'ndma_alerts'
+    'host': '127.0.0.1:3306',
+    'user': 'root',
+    'password': 'Prajwal.sql@25',
+    'database': 'alerts.db'
 }
