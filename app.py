@@ -1,35 +1,32 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request, jsonify
 import mysql.connector
+from db_config import db_config
 
 app = Flask(__name__)
 
-def get_connection():
-    return mysql.connector.connect(
-        host="127.0.0.1",  # Important: avoid 'localhost'
-        user="root",
-        password="Prajwal.sql@25",
-        database="alerts.db"
-    )
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
+    return render_template('index.html')
+
+@app.route('/get-alerts', methods=['POST'])
+def get_alerts():
+    data = request.json
+    input_severity = data.get('severity')
+    input_state = data.get('state')
+    input_area = data.get('district')
+
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor(dictionary=True)
+    cursor.callproc('filter_alerts_with_totals', (input_severity, input_state, input_area))
+
     results = []
-    if request.method == 'POST':
-        severity = request.form.get('severity') or None
-        state = request.form.get('state') or None
-        area = request.form.get('area') or None
+    for result in cursor.stored_results():
+        results = result.fetchall()
 
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.callproc('filter_alerts_with_totals', [severity, state, area])
+    cursor.close()
+    conn.close()
 
-        for result in cursor.stored_results():
-            results = result.fetchall()
-
-        cursor.close()
-        conn.close()
-
-    return render_template('index.html', results=results)
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
