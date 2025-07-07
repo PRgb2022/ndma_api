@@ -10,7 +10,7 @@ def index():
 
 @app.route('/get-alerts', methods=['POST'])
 def get_alerts():
-    data = request.json
+    data = request.get_json()
     input_severity = data.get('severity')
     input_state = data.get('state')
     input_area = data.get('district')
