@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>NDMA Alert Viewer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script>
     async function fetchAlerts() {
       const severity = document.getElementById('severity').value;
@@ -35,15 +37,24 @@
 </head>
 <body>
   <h2>NDMA Alert Filter</h2>
-  <label>Severity: <input type="text" id="severity"></label>
-  <label>State: <input type="text" id="state"></label>
-  <label>District: <input type="text" id="district"></label>
-  <button onclick="fetchAlerts()">Get Alerts</button>
 
-  <table border="1">
+  <div class="filter-box">
+    <label>Severity: <input type="text" id="severity"></label>
+    <label>State: <input type="text" id="state"></label>
+    <label>District: <input type="text" id="district"></label>
+    <button onclick="fetchAlerts()">Get Alerts</button>
+  </div>
+
+  <table>
     <thead>
       <tr>
-        <th>State</th><th>District</th><th>Severity</th><th>Event</th><th>Certainty</th><th>Count</th><th>Total</th>
+        <th>State</th>
+        <th>District</th>
+        <th>Severity</th>
+        <th>Event</th>
+        <th>Certainty</th>
+        <th>Count</th>
+        <th>Total</th>
       </tr>
     </thead>
     <tbody id="result"></tbody>
