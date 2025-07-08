@@ -15,24 +15,27 @@ def get_alerts():
         severity = data.get('severity')
         state = data.get('state')
         area = data.get('district')
-        
-        conn = mysql.connector.connect(**db_config)
+
+        print("Received from frontend:", severity, state, area) 
+
+        conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.callproc('filter_alerts_with_totals', [severity, state, area])
-        
+
         results = []
         for result in cursor.stored_results():
             results = result.fetchall()
 
-        print("RESULTS FROM DB:", results)
-        
+        print("RESULTS FROM DB:", results) 
+
         cursor.close()
         conn.close()
         return jsonify(results)
 
     except Exception as e:
-        print("❌ SERVER ERROR:", e)
+        print("SERVER ERROR:", e)
         return jsonify({'error': str(e)}), 500
+
 
 
 if __name__ == '__main__':
