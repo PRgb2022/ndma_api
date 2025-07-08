@@ -6,33 +6,44 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script>
     async function fetchAlerts() {
-      const severity = document.getElementById('severity').value;
-      const state = document.getElementById('state').value;
-      const district = document.getElementById('district').value;
+  let severity = document.getElementById('severity').value.trim();
+  let state = document.getElementById('state').value.trim();
+  let district = document.getElementById('district').value.trim();
 
-      const response = await fetch('/get-alerts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ severity, state, district })
-      });
+  // Convert empty string to null
+  severity = severity === '' ? null : severity;
+  state = state === '' ? null : state;
+  district = district === '' ? null : district;
 
-      const data = await response.json();
-      const table = document.getElementById('result');
-      table.innerHTML = '';
+  const response = await fetch('/get-alerts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ severity, state, district })
+  });
 
-      data.forEach(row => {
-        const tr = `<tr>
-          <td>${row.state_name}</td>
-          <td>${row.area_description}</td>
-          <td>${row.severity}</td>
-          <td>${row.event_type}</td>
-          <td>${row.certainty}</td>
-          <td>${row.location_alert_count}</td>
-          <td>${row.total_filtered_alerts}</td>
-        </tr>`;
-        table.innerHTML += tr;
-      });
-    }
+  const data = await response.json();
+  const table = document.getElementById('result');
+  table.innerHTML = '';
+
+  if (data.length === 0 || data.error) {
+    table.innerHTML = `<tr><td colspan="7">No alerts found or error occurred.</td></tr>`;
+    return;
+  }
+
+  data.forEach(row => {
+    const tr = `<tr>
+      <td>${row.state_name}</td>
+      <td>${row.area_description}</td>
+      <td>${row.severity}</td>
+      <td>${row.event_type}</td>
+      <td>${row.certainty}</td>
+      <td>${row.location_alert_count}</td>
+      <td>${row.total_filtered_alerts}</td>
+    </tr>`;
+    table.innerHTML += tr;
+  });
+}
+
   </script>
 </head>
 <body>
