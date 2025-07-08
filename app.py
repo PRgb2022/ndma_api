@@ -23,6 +23,8 @@ def get_alerts():
         results = []
         for result in cursor.stored_results():
             results = result.fetchall()
+
+        print("RESULTS FROM DB:", results)
         
         cursor.close()
         conn.close()
